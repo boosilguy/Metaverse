@@ -1,5 +1,3 @@
-인천 이음
-
 # Incheon EUM Metaverse
 
 이를 위해 시는 인천공항과 개항장·송도, 부평역 등을 대상으로 3D 맵을 제작하며 국내 최고 실내외 측위 기술을 통한 위치 기반 XR 메타버스 플랫폼 구축, 5G 연계 XR 서비스 플랫폼 구축 및 저작도구, 시뮬레이터, 오픈 응용프로그램 인터페이스(API) 개방형 서비스 플랫폼 등 기반을 마련한다. XR 글라스를 통한 다양한 서비스 제공, 서비스 확대, 메타버스 생태계 구축, 써드 파티 육성 및 지원 등도 나선다 [[발췌](https://www.etnews.com/20220620000005)].
@@ -33,7 +31,10 @@
 UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.kr/documents/sdk/install)). 이후 절차는 공식 홈페이지를 확인하시길 바랍니다.
 
 ### SDK를 활용한 서비스 개발 영상
-띠띠루뚜루
+
+[!Incheon EUM Metaverse - T1](http://img.youtube.com/vi/oLVMMJwwCKI/0.jpg)](http://www.youtube.com/watch?v=oLVMMJwwCKI "T1")
+
+[!Incheon EUM Metaverse - OpenPort](http://img.youtube.com/vi/O1AP2oTbgM4/0.jpg)](http://www.youtube.com/watch?v=O1AP2oTbgM4 "T1")
 
 ## Self-feedback
 
