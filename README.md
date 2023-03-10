@@ -32,9 +32,9 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
 
 ### SDK를 활용한 서비스 개발 영상
 
-[!Incheon EUM Metaverse - T1](http://img.youtube.com/vi/oLVMMJwwCKI/0.jpg)](http://www.youtube.com/watch?v=oLVMMJwwCKI "T1")
+[!IncheonMetaverse-T1](http://img.youtube.com/vi/oLVMMJwwCKI/0.jpg)](http://www.youtube.com/watch?v=oLVMMJwwCKI "T1")
 
-[!Incheon EUM Metaverse - OpenPort](http://img.youtube.com/vi/O1AP2oTbgM4/0.jpg)](http://www.youtube.com/watch?v=O1AP2oTbgM4 "T1")
+[!IncheonMetaverse-OpenPort](http://img.youtube.com/vi/O1AP2oTbgM4/0.jpg)](http://www.youtube.com/watch?v=O1AP2oTbgM4 "T1")
 
 ## Self-feedback
 
