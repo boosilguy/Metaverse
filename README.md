@@ -172,3 +172,11 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
     - DataTree
         - 서버에 올라간 DB 내용을 서비스 측에서 Unity Editor로 확인할 수 있도록 만든 샘플.
         - 관리자는 Setting의 Token을 관리자 토큰으로 기입하여, CRUD가 가능.
+
+## 참고
+
+- 개발 가이드라인 문서 : [문서](./development%20guide.pdf)
+- 시뮬레이터 소스
+    - [개항장](https://drive.google.com/file/d/1OsHmRzUAlhMln1lIInjZ7Tpr64_SMpm0/view?usp=drive_link)
+    - [송도](https://drive.google.com/file/d/1KjEgyXvDQTyWDEXG8cWbDNgI9OGmPHNW/view?usp=drive_link)
+    - [부평역](https://drive.google.com/file/d/1cakYyo0jZKEgjac9Nex1OZBnFcoppC2C/view?usp=drive_link)
