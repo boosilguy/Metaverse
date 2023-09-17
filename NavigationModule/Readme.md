@@ -187,3 +187,28 @@ private void Awake()
 ...
 
 ```
+
+### Appendix
+
+#### INavigationEventHandler
+
+```csharp
+
+/// <summary>
+/// 네비게이션 이벤트 핸들러 인터페이스입니다
+/// </summary>
+public interface INavigationEventHandler
+{
+    void OnInitialize();                                // 초기화 직후, 호출
+    void OnSessionStart(WayPoints wayPoints);           // Navigation 시작 직후, 호출
+    void OnStateChanged(NavStates state);               // 상태 변경 직후, 호출
+    void OnSessionEnd(NavEndSessionReasons reason);     // Navigation 종료 직후, 호출 (파라미터는 종료 사유)
+    void OnUpdatePath(Path path);                       // 현재 안내되는 Path가 업데이트된 직후, 호출
+    void OnUpdateWayPoints(WayPoints waypoints);        // 현재 안내되는 Waypoints가 업데이트된 직후, 호출 (e.g. 경유지 도착 직후 호출)
+    void OnArrivedTransitPoint(PathTransitPoint trans); // 경로 안내 중, Spatial간 이동이 발생하는 지점 도착시, 호출 (e.g. 엘레베이터, 계단 등등)
+    void OnLeftTransitPoint(PathTransitPoint trans);    // TransitPoint 이탈 직후, 호출
+    void OnUpdateTransitPoint(PathTransitPoint trans);  // TransitPoint를 지나쳐, 안내되는 다음 TransitPoint가 갱신될 시, 호출
+    void OnArrivedEndOfPath(Node arrivedNode);          // 안내된 Path의 종착점에 도달한 직후, 호출.
+}
+
+```
