@@ -100,6 +100,91 @@ public class DefaultMinimapViewerConfig : ScriptableObject
 
 ```
 
-## Visualization (DefaultMinimapViewer)
+## World Map Polygon Visualization (DefaultMinimapViewer)
 
-**StartView** 함수를 호출하여, Minimap을 실행할 수 있습니다.
+**StartView** 함수를 호출하여, Minimap을 실행할 수 있습니다. Navigation Module의 **NavDataContainer**가 갖고 있는 현재 Spatial의 정보를 얻어서 Polygon Object를 만들어 미니맵 카메라에 렌더링되도록 합니다.
+
+```csharp
+
+public override async void StartView()
+{
+    this.MinimapTexture = this.config?.MinimapTexture;
+    if (this.MinimapTexture == null)
+    {
+        this.MinimapTexture = new RenderTexture(512, 512, 16, RenderTextureFormat.ARGB32);
+        this.MinimapTexture.Create();
+    }
+
+    // 다른 Location의 정보가 있었음을 고려하여, Navigation의 맵 정보 초기화
+    Navigation.MapData.ClearAllMaps();
+    var spatials = Navigation.navDataContainer.GetSpatials();
+
+    if (config.RenderMap)
+    {
+        if (config.RenderOnlyCurrent)
+        {
+            RenderMap(CurrentSpatial);
+        }
+        else
+        {
+            // 현재 Spatial의 폴리곤 정보를 렌더링
+            _TotalPolygonNum = spatials.ToList().Select(s => Navigation.MapData.GetSpatialData(s.Id).PolygonsFeatures.Count).Aggregate((a, b) => a + b);
+
+            foreach (var spatial in spatials)
+            {
+                await RenderMap(spatial.Id);
+            }
+        }
+    }
+
+    CreateMinimapCamera();
+    RenderCurrentPositionIcon();           
+
+    // 미니맵 카메라의 Culling 작업
+    Camera.main.cullingMask = ~(1 << MinimapLayer);
+
+    Camera.main.cullingMask &= ~(1 << MapModelLayer);
+    Camera.main.cullingMask &= ~(1 << CurrentMinimapLayer);
+    Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("ExtendedMinimap"));
+    
+    if (!config.NodeLinkVisable)
+    {
+        Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("NODE"));
+        Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("LINK"));
+    }
+
+    base.StartView();
+    getSpatials = spatials;
+}
+
+```
+
+## Navigation Path Visualization (DefaultMinimapViewer)
+
+Navigation의 Waypoints 정보를 읽어와, LineRenderer로 경로를 직접 그려줍니다.
+
+![MinimapLineRenderer](./Image/minimap_00.png)
+
+**DefaultMinimapViewer**의 **OnUpdatePath**가 호출되면서 현재 **WayPoints**를 바탕으로, LineRenderer를 재구성합니다.
+
+```csharp
+
+...
+public override void OnUpdatePath(Path path)
+{
+    // Preview에서 예상 경로를 렌더링하기 위해, 제공되는 로직.
+    if (Navigation.State == NavStates.Ready)
+    {
+        ChangeSpatialViaActivatedPath(Navigation.ActiveWayPoints);
+        changedSpatials = true;
+        RenderPath(Navigation.ActiveWayPoints);
+    }
+    // 그 외, 네비게이션 중 발생하는 Path 업데이트 시, 호출되는 로직.
+    else
+    {
+        RenderPath(Navigation.ActiveWayPoints);
+    }
+}
+...
+
+```
