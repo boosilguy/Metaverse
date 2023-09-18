@@ -181,3 +181,113 @@ public class POI : IPOI, IEquatable<POI>
 ![POIState](./Image/poi_00.png)
 
 물론, SDK에서는 적정한 Event만 던져줄 뿐, 실제 작업은 서비스 사 입 맛에 맞게 작업할 수 있습니다 (Disappear 상태임에도 불구하고, 엔진에 렌더링 할 수 있음).
+
+## 적용 예제
+
+위 내용을 토대로, SDK Sample에 동봉되어 있는 POIMoudle 적용 예제입니다.
+
+```csharp
+
+public class SamplePOIManager : MonoBehaviour, IPOIEventHandler
+{
+    // 필드 초기화
+    ...
+
+    void Awake()
+    {
+        // 모듈 초기화 및 이벤트 부착
+        ...
+    }
+
+    ...
+
+    /// <summary>
+    /// POI 상태 변경시
+    /// </summary>
+    /// <param name="poi">상태가 변경된 POI 인스턴스</param>
+    /// <param name="state">해당 POI의 State</param>
+    public void OnChangePOIState(IPOI poi, POIState state)
+    {
+        switch(state)
+        {
+            case POIState.Enter:    //POI가 감지 영역안에 들어왔을때
+                Enter(poi);
+                break;
+            case POIState.Appear:   //POI가 렌더링 영역안에 들어왔을때
+                Appear(poi);
+                break;
+            case POIState.Disappear:    //POI가 렌더링 영역에서 나갔을때
+                Disappear(poi);
+                break;
+            case POIState.Leave:    //POI가 감지 영역에서 나갔을때
+                Leave(poi);
+                break;
+            case POIState.Dispose:  //POI 폐기 되었을때(SDK에서 관리하지 않음)
+                Dispose(poi);
+                break;
+        }
+    }
+
+    //Enter Event
+    private void Enter(IPOI poi)
+    {
+        // POI를 생성하고 Pooling하며, POI Layer를 설정합니다.
+        if (!createdPOIDict.ContainsKey(poi.ID))
+        {
+            GameObject o = Instantiate(PoiPrefab, poiGroup);
+            LayerUtil.ChangeLayersRecursively(o.transform, poiLayer);
+            o.transform.position = poi.WorldPosition + (Vector3.up * 1.5f);
+
+            SamplePOI s = o.GetComponent<SamplePOI>();            
+            s.Init(poi);
+
+            createdPOIDict.Add(poi.ID, o);
+        }
+    }
+
+    //Appear Event    
+    private void Appear(IPOI poi)
+    {
+        if (createdPOIDict.ContainsKey(poi.ID))
+            createdPOIDict[poi.ID].SetActive(true);
+    }
+
+    //Disappear Event
+    private void Disappear(IPOI poi)
+    {
+        if (createdPOIDict.ContainsKey(poi.ID))
+            createdPOIDict[poi.ID].SetActive(false);
+    }
+
+    //Leave Event
+    private void Leave(IPOI poi)
+    {
+        Dispose(poi);
+    }
+
+    private void Dispose(IPOI poi)
+    {
+        if (createdPOIDict.ContainsKey(poi.ID))
+        {
+            var o = createdPOIDict[poi.ID];
+            createdPOIDict.Remove(poi.ID);
+            Destroy(o);
+        }
+    }
+
+    /// <summary>
+    /// 더이상 POI관리자가 관리하지을 대상(Dispose POI)
+    /// 이후 POI Event가 발생하지 않음
+    /// 여기서 따로 캐시한 POI가 있다면 제거 필요
+    /// </summary>
+    /// <param name="poiLists"></param>
+    public void OnDisposingPOIList(IEnumerable<IPOI> poiLists)
+    {
+        foreach (var poi in poiLists)
+        {
+            Dispose(poi);
+        }
+    }
+}
+
+```
