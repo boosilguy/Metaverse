@@ -106,13 +106,13 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
         └── FFmpeg.exe
 ```
 - Module간의 Dependency를 최소화하기 위해 설계되었으며, Common은 공통적으로 사용할 수 있는 기능 (e.g. Custom Attribute, 외부 오픈소스 등), 그리고 Base는 가장 낮은 레벨의 데이터 (e.g. 맵 관련 클래스의 멤버, POI 데이터 형태), 인터페이스가 존재합니다.
-- Setting Module [`참여`]
+- Setting Module [(`참여`)](./SettingModule/Readme.md)
     - Common에는 위치하며, SDK의 공통적인 내용 및 각 서비스의 설정 요소 (서비스 쪽에서 커스텀하게 새로운 Setting을 추가하였다면)를 조절할 수 있음.
     - SPRFBehaviour (XR SDK 기본 모듈들을 참조할 수 있는 MonoBehaviour), SPRFScriptableObject (XR SDK 기본 모듈들을 참조할 수 있는 ScriptableObject), SPRFObject (XR SDK 기본 모듈들을 참조할 수 있는 클래스)를 상속받거나 사용한 스크립트에서는 새로운 Setting을 Attribute로 주입할 수 있음 (e.g. *[StringSetting("SDK Token", "value")]*).
     - 입사 후 처음으로 작업한 내용. Setting의 Attribute 값이 갱신될 때, Reflection을 통해서 Attribute를 소유한 멤버가 변화를 관찰할 수 있도록 구성하였음 (Dynamic Programming).
 - Editor
     - 서비스 측에서 SDK 기능을 편히 사용할 수 있도록 빼놓은 Editor Code와 편의 기능으로 구성되어 있습니다.
-    - Simulator.Editor.dll [`참여`]
+    - Simulator.Editor.dll [(`참여`)](./TrackerModule/Readme.md)
         - 시뮬레이터 기능이 없다면 서비스 측에서는 매번 빌드하여 직접 단말기 카메라를 통해, 공간 인식을 성공한 후 테스트를 진행하게 될 것입니다. 우리는 이 점을 고려하여, 단말기 공간인식을 모방한 Simulator 기능을 에디터 코드로 빼 놓았습니다.
         - 프로세스
             1. 상단 메뉴에서 Simulator Window를 Open.
@@ -120,7 +120,7 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
             3. Simulator Window에서 지역 설정 및 Input Type (e.g. 단일 이미지, 이미지 시퀀스, 동영상)에 따른 추가적인 설정 진행. 만약, 동영상의 Display matrix가 0이 아닌 경우 (정방향이 아닌, 수평으로 드러눕는 영상인 경우), 내장된 FFmpeg을 통해, 새롭게 인코딩 가능.
             4. Play 버튼 혹은 공간 인식 버튼을 눌러, Tracker에 Input을 전달.
             동영상의 경우, VideoPlayer Component를 통해 전달.
-    - Tracker.Editor.dll [`참여`]
+    - Tracker.Editor.dll [(`참여`)](./TrackerModule/Readme.md)
         - 아무리 Texture Input 기반으로 Tracker가 동작하더라도, 현재 Tracker의 학습 수준이 저급한 상태라면 XR SDK는 공간 인식에 적합한 Texture가 들어올 때까지, 인식 Fail State를 갖게 될 것입니다. 우리는 이 점을 고려하여, Tracker가 정상적으로 공간 인식을 성공했다는 전제를 가정한 Simulation Tracker 기능을 고려하였습니다.
         - Setting Module을 통해 (Setting Editor), Texture input을 off하면 해당 기능을 사용할 수 있도록 구성하였습니다.
         - WASD 이동, 마우스 카메라 이동 등을 지원하며, 층간 이동 및 다른 지역 이동 등을 지원합니다.
@@ -136,7 +136,7 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
         - 네트워크 통신에 사용되는 모듈. 각 모듈에서 필요한 외부 데이터들을 초기화 단계 혹은 실시간 통신으로 Container에 담아둡니다.
     - Map.dll
         - 맵 저작도구에 지원되는 모듈.
-    - Navigation.dll [`참여`]
+    - Navigation.dll [(`참여`)](./NavigationModule/Readme.md)
         - 네비게이션 서비스를 지원하는 모듈.
         - Geojson의 Node, Link 데이터, 그리고 Joint (인접한 다른 Geojson을 동적 연결)를 바탕으로 A* 알고리즘을 적용하여 동작합니다.
         - 네비게이션은 별도의 State (초기화, 준비, 재탐색, 경유지 도착, 목적지 도착, 에러, 중단)를 갖고 있으며, Tracker의 State에 의존하여 동작합니다.
@@ -146,12 +146,12 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
         - 부수적인 기능 (모두 Configuration을 통해 설정 가능토록 설계)
             1. SummaryMilestone : 현재 네비게이션에서 목적지까지의 안내된 경로의 종합적인 정보 제공.
             2. PathMilestone : 사용자가 현재 직면한 단위 구간 경로 정보 제공 (e.g. A 지점까지 100m 이동 후 좌회전하세요). TTS와 연동할 수 있는 Flag도 제공.
-    - POI.dll [`유지보수참여`]
+    - POI.dll [(`참여`)](./POIModule/Readme.md)
         - 현재 위치 기반으로 POI 정보의 Lifecycle을 관리.
         - 지정된 범위를 간격으로 네트워크에 요청을 보내, POI 정보들을 Pooling하며, 이 직후, 각각 Lifecycle을 소유하게 됨.
         - SDK에서는 MonoBehaviour, IPOIEventHandler를 구현한 Manager 방식으로 관리할 수 있도록 설계
         - Setting Module을 통해, POI 인식까지 필요한 설정값 (e.g. 감지 범위, 폐기 범위 등)들을 조절할 수 있음.
-    - Tracker.dll [`참여`]
+    - Tracker.dll [(`참여`)](./TrackerModule/Readme.md)
         - Tracker 종류, Tracker 사용 타입에 따라, 설계되었음.
             - Naver Tracker (ANTracker)
             - Simulation Tracker
@@ -160,13 +160,13 @@ UPM의 Scoped Registries 사용 ([Install Guide](https://xrdeveloper.strato.co.k
         - 인식된 Texture를 바탕으로, Tracker는 현재 위치에 대한 정보를 Tracker 서버로부터 전달받음. 이와 동시에 ObjectDetection도 활성화가 되어, 객체 인식을 수행할 수 있게 됨. 내부 이벤트 핸들러를 통해, 객체 인식시 이벤트가 발행되도록 구현.
         - 실제 동작할 Tracker SDK의 헬퍼로 구성되어 있으며, Tracker의 실제 작동은 TrackerControllerBase를 통해 제어함. 즉, 현재 서비스 단계에서는 TrackerControllerBase를 Implement한 ANTrackerController와 SimulationTrackerController 두 가지로 구성이 됨.
         - Tracker Module을 통해, 서비스측에서 Tracker SDK의 Lifecycle에 맞는 이벤트를 구독할 수 있고, 이를 관리하는 역할을 수행.
-    - Speech.dll [`참여`]
+    - Speech.dll [(`참여`)](./Chatbot/Readme.md)
         - 외부 TTS/STT 서비스를 이용하여 음성 인식, 출력을 서비스 쪽에서 쉽게 작업하도록 지원하는 Module.
-        - 현재는 Naver CLOVA만 지원하며, Rest API 서비스로 구성되었음.
+        - 현재는 Naver CLOVA만 지원.
 - Samples
-    - NavWithPOI [`참여`]
+    - NavWithPOI (`참여`)
         - 서비스 측에서 참고하여 네비게이션 및 POI 서비스를 개발할 수 있도록 만든 샘플.
-    - ObjectDetection [`참여`]
+    - ObjectDetection (`참여`)
         - 서비스 측에서 참고하여 객체 인식 서비스를 개발할 수 있도록 만든 샘플.
         - Tracker Module을 실행시키기 위해, 간단한 네비게이션 서비스도 포함시킴.
     - DataTree
